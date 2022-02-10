@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Train Remote</title>
+  </head>
+  <body>
+    <button onClick="connect();">Connect</button>
+    <script>
+      async function connect() {
+        const utf8decoder = new TextDecoder();
+
+        const device = await navigator.bluetooth.requestDevice({
+          filters: [
+            { services: ['e4580f53-0298-41fa-8210-ce8f8bbe23a3'] },
+            { services: ['6e400001-b5a3-f393-e0a9-e50e24dcca9e'] }
+          ]
+        });
+
+        console.log('Name: ' + device.name);
+        await device.gatt.connect();
+        const trainService = await device.gatt.getPrimaryService('e4580f53-0298-41fa-8210-ce8f8bbe23a3');
+
+        const features = await trainService.getCharacteristics();
+
+        const descs = await features[1].getDescriptors();
+        console.log(descs);
+
+        for await (const feature of features) {
+          if (feature.uuid === '0000000d-0000-1000-8000-00805f9b34fb') {
+            const velocity = document.createElement('input');
+            velocity.type = 'range';
+            velocity.id = 'velocity';
+            velocity.min = -100;
+            velocity.max = 100;
+            velocity.value = 0;
+            velocity.step = 10;
+            velocity.addEventListener('change', async event => {
+              await feature.writeValueWithoutResponse(Int8Array.from([Number(event.target.value)]));
+            });
+            document.body.appendChild(velocity);
+          } else {
+            const box = document.createElement('input');
+            box.type = 'checkbox';
+            box.id = feature.uuid;
+            box.addEventListener('click', async event => {
+              console.log(event);
+              if (event.target.checked) {
+                await feature.writeValueWithoutResponse(Uint8Array.from([1]));
+              } else {
+                await feature.writeValueWithoutResponse(Uint8Array.from([0]));
+              }
+              console.log((await feature.readValue()).getUint8());
+            });
+            document.body.appendChild(box);
+
+            const labelDesc = await feature.getDescriptor('00002901-0000-1000-8000-00805f9b34fb');
+            const labelValue = utf8decoder.decode(await labelDesc.readValue());
+            const label = document.createElement('label');
+            label.for = feature.uuid;
+            label.textContent = labelValue;
+            document.body.appendChild(label);
+          }
+        }
+      }
+    </script>
+  </body>
+</html>
