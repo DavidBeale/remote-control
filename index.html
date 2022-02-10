@@ -23,9 +23,6 @@
 
         const features = await trainService.getCharacteristics();
 
-        const descs = await features[1].getDescriptors();
-        console.log(descs);
-
         for await (const feature of features) {
           if (feature.uuid === '0000000d-0000-1000-8000-00805f9b34fb') {
             const velocity = document.createElement('input');
@@ -36,7 +33,7 @@
             velocity.value = 0;
             velocity.step = 10;
             velocity.addEventListener('change', async event => {
-              await feature.writeValueWithoutResponse(Int8Array.from([Number(event.target.value)]));
+              await feature.writeValue(Int8Array.from([Number(event.target.value)]));
             });
             document.body.appendChild(velocity);
           } else {
@@ -46,16 +43,16 @@
             box.addEventListener('click', async event => {
               console.log(event);
               if (event.target.checked) {
-                await feature.writeValueWithoutResponse(Uint8Array.from([1]));
+                await feature.writeValue(Uint8Array.from([1]));
               } else {
-                await feature.writeValueWithoutResponse(Uint8Array.from([0]));
+                await feature.writeValue(Uint8Array.from([0]));
               }
               console.log((await feature.readValue()).getUint8());
             });
             document.body.appendChild(box);
 
-            const labelDesc = await feature.getDescriptor('00002901-0000-1000-8000-00805f9b34fb');
-            const labelValue = utf8decoder.decode(await labelDesc.readValue());
+            // const labelDesc = await feature.getDescriptor('00002901-0000-1000-8000-00805f9b34fb');
+            const labelValue = 'UNKNOWN' // utf8decoder.decode(await labelDesc.readValue());
             const label = document.createElement('label');
             label.for = feature.uuid;
             label.textContent = labelValue;
