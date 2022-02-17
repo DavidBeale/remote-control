@@ -1,7 +1,8 @@
-import * as tranService from './TrainService.js';
+import './RemoteControl.js';
+import * as trainService from './TrainService.js';
 
 export async function connect() {
-  await tranService.connect();
+  await trainService.connect();
 
   const features = await trainService.getFeatures();
 
@@ -14,6 +15,7 @@ export async function connect() {
       velocity.max = 100;
       velocity.value = 0;
       velocity.step = 10;
+      velocity.style.zoom = 2;
       velocity.addEventListener('change', async event => {
         await feature.writeValue(Int8Array.from([Number(event.target.value)]));
       });

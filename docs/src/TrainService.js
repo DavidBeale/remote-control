@@ -24,4 +24,5 @@ export async function disconnect() {
 
 export async function getFeatures() {
   const features = await primaryService.getCharacteristics();
+  return features;
 }
