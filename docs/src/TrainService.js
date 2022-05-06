@@ -3,26 +3,56 @@ const TRAIN_SERVICE_UUID = 'e4580f53-0298-41fa-8210-ce8f8bbe23a3';
 
 let device;
 let primaryService;
+const featureMap = {};
 
-export async function connect() {
+export async function select() {
   device = await navigator.bluetooth.requestDevice({
     filters: [
       { services: [TRAIN_SERVICE_UUID] },
       { services: ['6e400001-b5a3-f393-e0a9-e50e24dcca9e'] }
     ]
   });
+}
+
+export async function connect() {
   await device.gatt.connect();
 
   primaryService = await device.gatt.getPrimaryService(TRAIN_SERVICE_UUID);
+
+  device.addEventListener('gattserverdisconnected', reConnect);
+
+  await loadFeatures();
 }
 
 export async function disconnect() {
+  device.removeEventListener('gattserverdisconnected', reConnect);
+
   await device.disconnect();
   device = null;
-  primaryService = mull;
+  primaryService = null;
 }
 
 export async function getFeatures() {
+  return Object.values(featureMap);
+}
+
+function reConnect() {
+  console.log('Disconnected from',  device.name);
+  primaryService = null;
+  connect();
+}
+
+async function loadFeatures() {
   const features = await primaryService.getCharacteristics();
-  return features;
+
+  for (const feature of features) {
+    if (!featureMap[feature.uuid]) {
+      featureMap[feature.uuid] = {
+        uuid: feature.uuid
+      };
+    }
+
+    featureMap[feature.uuid].writeValue = feature.writeValue.bind(feature),
+    featureMap[feature.uuid].readValue = feature.readValue.bind(feature)
+  }
 }

@@ -2,6 +2,7 @@ import './RemoteControl.js';
 import * as trainService from './TrainService.js';
 
 export async function connect() {
+  await trainService.select();
   await trainService.connect();
 
   const features = await trainService.getFeatures();
