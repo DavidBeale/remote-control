@@ -26,7 +26,6 @@ export async function connect() {
       box.type = 'checkbox';
       box.id = feature.uuid;
       box.addEventListener('click', async event => {
-        console.log(event);
         if (event.target.checked) {
           await feature.writeValue(Uint8Array.from([1]));
         } else {

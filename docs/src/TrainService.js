@@ -15,20 +15,19 @@ export async function select() {
 }
 
 export async function connect() {
-  console.log('Connecting to',  device.name);
+  console.log('Connecting to device ' + device.name);
   await device.gatt.connect();
+  console.log('Connected to device', device.name);
 
   primaryService = await device.gatt.getPrimaryService(TRAIN_SERVICE_UUID);
 
   device.addEventListener('gattserverdisconnected', reConnect);
-  device.gattserverdisconnected = reConnect;
 
   await loadFeatures();
 }
 
 export async function disconnect() {
   device.removeEventListener('gattserverdisconnected', reConnect);
-  device.gattserverdisconnected = undefind;
 
   await device.disconnect();
   device = null;
@@ -40,7 +39,7 @@ export async function getFeatures() {
 }
 
 function reConnect() {
-  console.log('Disconnected from',  device.name);
+  console.log('Disconnected from device', device.name);
   primaryService = null;
   connect();
 }
