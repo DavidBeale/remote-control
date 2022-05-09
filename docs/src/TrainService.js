@@ -15,17 +15,20 @@ export async function select() {
 }
 
 export async function connect() {
+  console.log('Connecting to',  device.name);
   await device.gatt.connect();
 
   primaryService = await device.gatt.getPrimaryService(TRAIN_SERVICE_UUID);
 
   device.addEventListener('gattserverdisconnected', reConnect);
+  device.gattserverdisconnected = reConnect;
 
   await loadFeatures();
 }
 
 export async function disconnect() {
   device.removeEventListener('gattserverdisconnected', reConnect);
+  device.gattserverdisconnected = undefind;
 
   await device.disconnect();
   device = null;
