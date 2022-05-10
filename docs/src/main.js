@@ -1,4 +1,5 @@
 import './RemoteControl.js';
+import './Observable.js';
 import * as trainService from './TrainService.js';
 
 export async function connect() {
