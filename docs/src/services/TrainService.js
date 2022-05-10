@@ -1,3 +1,4 @@
+import multirate from '../utils/multirate.js';
 
 const TRAIN_SERVICE_UUID = 'e4580f53-0298-41fa-8210-ce8f8bbe23a3';
 
@@ -48,13 +49,28 @@ async function loadFeatures() {
   const features = await primaryService.getCharacteristics();
 
   for (const feature of features) {
+    let value;
+    let resolver;
+
     if (!featureMap[feature.uuid]) {
       featureMap[feature.uuid] = {
-        uuid: feature.uuid
+        uuid: feature.uuid,
+        value: multirate((async function* () {
+          if (value !== undefined) yield value;
+          while (true) {
+            yield await new Promise(resolve => {
+              resolver = resolve;
+            });
+          }
+        })())
       };
     }
 
-    featureMap[feature.uuid].writeValue = feature.writeValue.bind(feature),
-    featureMap[feature.uuid].readValue = feature.readValue.bind(feature)
+    featureMap[feature.uuid].writeValue = feature.writeValue.bind(feature);
+    featureMap[feature.uuid].readValue = feature.readValue.bind(feature);
+    feature.addEventListener('oncharacteristicvaluechanged', console.log);
+
+    value = await feature.readValue();
+    resolver(value);
   }
 }
