@@ -41,7 +41,6 @@ window.customElements.define('feature-switch', FeatureSwitch);
 
 async function subscribe(asyncInterator) {
   for await (let value of asyncInterator) {
-    console.log(value.getUint8());
     this.shadowRoot.getElementById('switch').checked = value.getUint8();
   }
 }

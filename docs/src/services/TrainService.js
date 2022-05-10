@@ -49,28 +49,28 @@ async function loadFeatures() {
   const features = await primaryService.getCharacteristics();
 
   for (const feature of features) {
-    let value;
-    let resolver;
-
     if (!featureMap[feature.uuid]) {
       featureMap[feature.uuid] = {
-        uuid: feature.uuid,
-        value: multirate((async function* () {
-          if (value !== undefined) yield value;
-          while (true) {
-            yield await new Promise(resolve => {
-              resolver = resolve;
-            });
-          }
-        })())
+        uuid: feature.uuid
       };
+      featureMap[feature.uuid].value = multirate((async function* () {
+        if (feature.value) yield feature.value;
+        while (true) {
+          yield await new Promise(resolve => {
+            featureMap[feature.uuid].resolver = resolve;
+          });
+        }
+      })());
     }
 
     featureMap[feature.uuid].writeValue = feature.writeValue.bind(feature);
     featureMap[feature.uuid].readValue = feature.readValue.bind(feature);
-    feature.addEventListener('oncharacteristicvaluechanged', console.log);
+    feature.addEventListener('characteristicvaluechanged', async () => {
+      featureMap[feature.uuid]?.resolver(feature.value);
+    });
+    feature.startNotifications();
 
-    value = await feature.readValue();
-    resolver(value);
+    await feature.readValue();
+    featureMap[feature.uuid]?.resolver(feature.value);
   }
 }

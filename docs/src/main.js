@@ -1,5 +1,4 @@
 // import './RemoteControl.js';
-import './components/Observable.js';
 import './components/FeatureSwitch.js';
 import * as trainService from './services/TrainService.js';
 
