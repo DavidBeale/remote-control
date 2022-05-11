@@ -23,11 +23,11 @@ export default class FeatureSwitch extends HTMLElement {
     const input = this.shadowRoot.getElementById('switch');
     input.addEventListener('click', async (event) => {
       if (!this._feature) return;
-        if (event.target.checked) {
-          await this._feature.writeValue(Uint8Array.from([1]));
-        } else {
-          await this._feature.writeValue(Uint8Array.from([0]));
-        }
+      if (event.target.checked) {
+        await this._feature.writeValue(Uint8Array.from([1]));
+      } else {
+        await this._feature.writeValue(Uint8Array.from([0]));
+      }
     });
   }
 
