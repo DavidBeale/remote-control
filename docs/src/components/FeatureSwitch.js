@@ -1,7 +1,8 @@
+import featureMap from '../services/FeatureMap.js';
 
 const template = document.createElement('template');
 template.innerHTML = `
-  <label id="label" for="switch"><slot /></label>
+  <label id="label" for="switch"></label>
   <input id="switch" type="checkbox" />
 `;
 
@@ -29,10 +30,13 @@ export default class FeatureSwitch extends HTMLElement {
         await this._feature.writeValue(Uint8Array.from([0]));
       }
     });
+
+    this.shadowRoot.getElementById('label').innerText = featureMap[this._feature.uuid].label;
   }
 
   set feature(feature) {
     this._feature = feature;
+
     subscribe.call(this, this._feature.value());
   }
 }

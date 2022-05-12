@@ -1,4 +1,4 @@
-// import './RemoteControl.js';
+import './components/RemoteControl.js';
 import './components/FeatureSwitch.js';
 import * as trainService from './services/TrainService.js';
 
@@ -23,19 +23,6 @@ export async function connect() {
       });
       document.body.appendChild(velocity);
     } else {
-      // const box = document.createElement('input');
-      // box.type = 'checkbox';
-      // box.id = feature.uuid;
-      // box.addEventListener('click', async event => {
-      //   if (event.target.checked) {
-      //     await feature.writeValue(Uint8Array.from([1]));
-      //   } else {
-      //     await feature.writeValue(Uint8Array.from([0]));
-      //   }
-      //   console.log((await feature.readValue()).getUint8());
-      // });
-      // document.body.appendChild(box);
-      //
       // // const labelDesc = await feature.getDescriptor('00002901-0000-1000-8000-00805f9b34fb');
       // const labelValue = 'UNKNOWN' // utf8decoder.decode(await labelDesc.readValue());
       // const label = document.createElement('label');
@@ -44,7 +31,6 @@ export async function connect() {
       // document.body.appendChild(label);
 
       const featureSwitch = document.createElement('feature-switch');
-      featureSwitch.innerText = 'Toggle';
       featureSwitch.feature = feature;
       document.body.appendChild(featureSwitch);
     }

@@ -1,9 +1,48 @@
-
+import './FeatureSpeed.js';
+import './FeatureGear.js';
 
 const template = document.createElement('template');
 template.innerHTML = `
-  <p>Hello <slot name="name" /></p>
-  <button>Click</button>
+  <style>
+    section {
+      display: flex;
+      height: 100%;
+      flex-direction: column;
+    }
+
+    fieldset {
+      border: none;
+    }
+
+    #switches {
+      flex-grow: 1;
+    }
+
+    #velocity {
+      gap: 2rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    #direction {
+      gap: 2rem;
+      display: flex;
+    }
+
+    #direction > :nth-child(1) {
+      flex-grow: 1;
+    }
+  </style>
+  <section>
+    <fieldset id="switches"></fieldset>
+    <fieldset id="velocity">
+      <div id="direction">
+        <feature-gear></feature-gear>
+        <button>Stop</button>
+      </div>
+      <feature-speed></feature-speed>
+    </fieldset>
+  </section>
 `;
 
 export default class RemoteControl extends HTMLElement {
@@ -16,34 +55,9 @@ export default class RemoteControl extends HTMLElement {
   }
 
   async connectedCallback() {
-    this.slots = htmlTemplateBind(template, this.shadowRoot);
-    this.slots.name = 'David';
+    const clone = template.content.cloneNode(true);
+    this.shadowRoot.appendChild(clone);
   }
 }
 
 window.customElements.define('remote-control', RemoteControl);
-
-
-function htmlTemplateBind(template, domNode) {
-  const templateSlots = template.content.querySelectorAll('slot[name]');
-
-  const clone = template.content.cloneNode(true);
-  domNode.appendChild(clone);
-
-  const slots = {};
-  Array.from(templateSlots).forEach(templateSlot => {
-    let value;
-    Object.defineProperty(slots, templateSlot.name, {
-      get() { return value; },
-      set(newValue) {
-        value = newValue;
-        const slotInstance = domNode.querySelector(`slot[name="${templateSlot.name}"]`);
-        if (slotInstance) slotInstance.innerText = value;
-      },
-      enumerable: true,
-      configurable: false
-    })
-  });
-
-  return slots;
-}

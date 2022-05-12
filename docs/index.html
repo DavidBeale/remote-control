@@ -8,12 +8,18 @@
     <title>BLE Remote Control</title>
   </head>
   <body>
+    <style>
+      html, body {
+        height: 95vh;
+      }
+    </style>
+
     <button onClick="connect();">Connect</button>
     <script type="module">
       import { connect } from './src/main.js';
 
       window.connect = connect;
     </script>
-    <!-- <remote-control /> -->
+    <remote-control />
   </body>
 </html>
