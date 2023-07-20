@@ -26,7 +26,15 @@ export async function connect() {
     console.error('Failed to connect to Device');
     console.error(error.stack ?? error);
     console.log('Retrying in 3secs');
-    setTimeout(connect, 3000);
+    setTimeout(async () => {
+      // Can't just call device.gatt.connect() again in WebBLE browser on iOS :-(
+      device = await navigator.bluetooth.requestDevice({
+        filters: [
+          { name: device.name }
+        ]
+      });
+      connect();
+    }, 3000);
   }
 
    device.addEventListener('gattserverdisconnected', reConnect);
