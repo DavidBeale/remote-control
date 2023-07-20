@@ -17,19 +17,24 @@ export async function connect() {
       velocity.max = 100;
       velocity.value = 0;
       velocity.step = 10;
-      velocity.style.zoom = 2;
+      velocity.style.zoom = 3;
+      velocity.style.width = '100%';
+      velocity.style.paddingBlock = '1rem';
       velocity.addEventListener('change', async event => {
         await feature.writeValue(Int8Array.from([Number(event.target.value)]));
       });
       document.body.appendChild(velocity);
+      
+      const stop = document.createElement('button');
+      stop.innerText = 'STOP';
+      stop.style.background = 'red';
+      stop.style.zoom = 2;
+      stop.addEventListener('click', () => {
+        velocity.value = 0;
+        feature.writeValue(Int8Array.from([0]));
+      })
+      document.body.appendChild(stop);
     } else {
-      // // const labelDesc = await feature.getDescriptor('00002901-0000-1000-8000-00805f9b34fb');
-      // const labelValue = 'UNKNOWN' // utf8decoder.decode(await labelDesc.readValue());
-      // const label = document.createElement('label');
-      // label.for = feature.uuid;
-      // label.textContent = labelValue;
-      // document.body.appendChild(label);
-
       const featureSwitch = document.createElement('feature-switch');
       featureSwitch.feature = feature;
       document.body.appendChild(featureSwitch);
