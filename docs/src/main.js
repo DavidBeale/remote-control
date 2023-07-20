@@ -2,7 +2,10 @@ import './components/RemoteControl.js';
 import './components/FeatureSwitch.js';
 import * as trainService from './services/TrainService.js';
 
+wakeLock();
+
 export async function connect() {
+  await wakeLock();
   await trainService.select();
   await trainService.connect();
 
@@ -39,5 +42,14 @@ export async function connect() {
       featureSwitch.feature = feature;
       document.body.appendChild(featureSwitch);
     }
+  }
+}
+
+
+async function wakeLock() {
+  try {
+    const wakeLock = await navigator.wakeLock.request("screen");
+  } catch (error) {
+    console.error(error);
   }
 }

@@ -17,12 +17,19 @@ export async function select() {
 
 export async function connect() {
   console.log('Connecting to device ' + device.name);
-  await device.gatt.connect();
-  console.log('Connected to device', device.name);
+  try {
+    await device.gatt.connect();
+    console.log('Connected to device', device.name);
 
-  primaryService = await device.gatt.getPrimaryService(TRAIN_SERVICE_UUID);
+    primaryService = await device.gatt.getPrimaryService(TRAIN_SERVICE_UUID);
+  } catch (error) {
+    console.error('Failed to connect to Device');
+    console.error(error.stack ?? error);
+    console.log('Retrying in 3secs');
+    setTimeout(connect, 3000);
+  }
 
-  device.addEventListener('gattserverdisconnected', reConnect);
+   device.addEventListener('gattserverdisconnected', reConnect);
 
   await loadFeatures();
 }
