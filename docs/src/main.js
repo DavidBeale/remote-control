@@ -9,6 +9,9 @@ export async function connect() {
   await trainService.select();
   await trainService.connect();
 
+  const connectButton = document.querySelector('#connect');
+  connectButton.disabled = true;
+
   const features = await trainService.getFeatures();
 
   for await (const feature of features) {
