@@ -1,6 +1,7 @@
 import './components/RemoteControl.js';
 import './components/FeatureSwitch.js';
 import * as trainService from './services/TrainService.js';
+import RangeSlider from './components/RangeSlider.js';
 
 wakeLock();
 
@@ -22,7 +23,7 @@ export async function connect() {
       velocity.min = -100;
       velocity.max = 100;
       velocity.value = 0;
-      velocity.step = 10;
+      velocity.step = 5;
       velocity.style.zoom = 3;
       velocity.style.width = '100%';
       velocity.style.paddingBlock = '1rem';
@@ -30,6 +31,7 @@ export async function connect() {
         await feature.writeValue(Int8Array.from([Number(event.target.value)]));
       });
       document.body.appendChild(velocity);
+      new RangeSlider(velocity, { range: 'circular' });
       
       const stop = document.createElement('button');
       stop.innerText = 'STOP';
@@ -37,7 +39,7 @@ export async function connect() {
       stop.style.zoom = 2;
       stop.addEventListener('click', () => {
         velocity.value = 0;
-        feature.writeValue(Int8Array.from([0]));
+        velocity.dispatchEvent(new Event('input', { 'bubbles': true }));
       })
       document.body.appendChild(stop);
     } else {
