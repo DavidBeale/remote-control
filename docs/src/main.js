@@ -2,6 +2,7 @@ import './components/RemoteControl.js';
 import './components/FeatureSwitch.js';
 import * as trainService from './services/TrainService.js';
 import RangeSlider from './components/RangeSlider.js';
+import enqueue from './utils/enqueue.js';
 
 wakeLock();
 
@@ -17,10 +18,13 @@ export async function connect() {
 
   for await (const feature of features) {
     if (feature.uuid === '0000000d-0000-1000-8000-00805f9b34fb') {
+      let direction = 1;
+
+      const reverse = document.createElement('input');
       const velocity = document.createElement('input');
       velocity.type = 'range';
       velocity.id = 'velocity';
-      velocity.min = -100;
+      velocity.min = 0;
       velocity.max = 100;
       velocity.value = 0;
       velocity.step = 5;
@@ -28,10 +32,15 @@ export async function connect() {
       velocity.style.width = '100%';
       velocity.style.paddingBlock = '1rem';
       velocity.addEventListener('change', async event => {
-        await feature.writeValue(Int8Array.from([Number(event.target.value)]));
+        enqueue(() => feature.writeValue(Int8Array.from([event.target.valueAsNumber * direction])));
+        reverse.disabled = event.target.valueAsNumber !== 0
       });
       document.body.appendChild(velocity);
       new RangeSlider(velocity, { range: 'circular' });
+      
+      reverse.type = 'checkbox';
+      reverse.addEventListener('change', (event) => event.target.checked ? direction = -1 : direction = 1);
+      document.body.appendChild(reverse);
       
       const stop = document.createElement('button');
       stop.innerText = 'STOP';

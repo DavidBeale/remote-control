@@ -136,8 +136,8 @@ export default class RangeSlider {
       let angle = start;
       const rad = 360 / (this.max - this.min);
       if (!angle) {angle = rad * this.range.valueAsNumber + this.settings.offset;}
-      const end = angle - this.settings.offset;
-      // if (end < 0) {end = end + 360;}
+      let end = angle - this.settings.offset;
+      if (end < 0) {end = end + 360;}
 
       const value = Math.ceil(end / rad);
 
@@ -145,7 +145,6 @@ export default class RangeSlider {
 
       this.range.value = value;
       this.range.dispatchEvent(new Event('change', { 'bubbles': true }));
-      console.log(angle, end, this.range.value);
 
       this.wrapper.dataset.value = this.range.value;
       this.wrapper.style.setProperty('--angle', `${angle}deg`);
