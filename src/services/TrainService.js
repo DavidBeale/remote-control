@@ -5,12 +5,14 @@ const TRAIN_SERVICE_UUID = 'e4580f53-0298-41fa-8210-ce8f8bbe23a3';
 let primaryService;
 const featureMap = {};
 
-export async function select() {
+export async function select(name) {
   const device = await navigator.bluetooth.requestDevice({
-    filters: [
-      { services: [TRAIN_SERVICE_UUID] },
-      { services: ['6e400001-b5a3-f393-e0a9-e50e24dcca9e'] }
-    ]
+    filters: name
+      ? [{ name }]
+      : [
+          { services: [TRAIN_SERVICE_UUID] },
+          { services: ['6e400001-b5a3-f393-e0a9-e50e24dcca9e'] }
+        ]
   });
 
   return device;

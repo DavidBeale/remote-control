@@ -1,19 +1,19 @@
 import { render } from 'preact';
 import asWebComponent, { dispatchEvent } from 'as-web-component';
 
-async function* DeviceSelector(devices, currentDeviceId) {
-  const select = (uuid) => {
+async function* DeviceSelector(devices, currentDeviceName) {
+  const select = (name) => {
     dispatchEvent(
       this,
       new CustomEvent('change', {
         detail: {
-          uuid
+          name
         }
       })
     );
   };
 
-  for await (const { props } of this({ devices, currentDeviceId })) {
+  for await (const { props } of this({ devices, currentDeviceName })) {
     yield (
       <>
         <link rel="stylesheet" href="/dist/main.css"></link>
@@ -47,12 +47,12 @@ async function* DeviceSelector(devices, currentDeviceId) {
 
         <nav>
           <div role="group">
-            {Object.entries(props.devices).map(([name, uuid]) => {
-              if (uuid === props.currentDeviceId) {
+            {props.devices.map((name) => {
+              if (name === props.currentDeviceName) {
                 return <button aria-current="true">{name}</button>;
               }
               return (
-                <button class="secondary" onClick={() => select(uuid)}>
+                <button class="secondary" onClick={() => select(name)}>
                   {name}
                 </button>
               );

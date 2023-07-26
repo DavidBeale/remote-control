@@ -4,22 +4,17 @@ import asWebComponent from 'as-web-component';
 import Header from './components/Header.jsx';
 import DeviceSelector from './components/DeviceSelector.jsx';
 import Controls from './controls/Controls.jsx';
-import { select } from './services/TrainService.js';
 
 async function* RemoteControl() {
-  const knownDevices = {
-    Star: 'uuid-234234-234-234',
-    Jessie: 'uuid-s-sdf-sdf-sdf'
+  const knownDevices = ['Star', 'Jessie'];
+
+  this.currentDeviceName = knownDevices[0];
+
+  const changeDevice = (name) => {
+    this.currentDeviceName = name;
   };
 
-  this.currentDeviceId = Object.entries(knownDevices)[0][1];
-
-  const changeDevice = (uuid) => {
-    this.currentDeviceId = uuid;
-    select(uuid);
-  };
-
-  for await (const { currentDeviceId } of this) {
+  for await (const { currentDeviceName } of this) {
     yield (
       <>
         <link rel="stylesheet" href="/dist/main.css"></link>
@@ -27,10 +22,10 @@ async function* RemoteControl() {
         <main class="container-fluid">
           <DeviceSelector
             devices={knownDevices}
-            currentDeviceId={currentDeviceId}
-            onChange={(event) => changeDevice(event.detail.uuid)}
+            currentDeviceName={currentDeviceName}
+            onChange={(event) => changeDevice(event.detail.name)}
           ></DeviceSelector>
-          <Controls></Controls>
+          <Controls deviceName={currentDeviceName}></Controls>
         </main>
       </>
     );

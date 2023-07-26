@@ -1,10 +1,19 @@
 import { render } from 'preact';
 import asWebComponent from 'as-web-component';
 
+import { select } from '../services/TrainService.js';
 import Throttle from './Throttle';
 
-async function* Controls(features = []) {
-  for await (const { props } of this({ features })) {
+async function* Controls(deviceName) {
+  const connect = async () => {
+    this.device = await select(this.props.deviceName);
+  };
+
+  for await (const { props, device } of this({ deviceName })) {
+    if (device && props.deviceName !== device.name) {
+      this.device = undefined;
+    }
+
     yield (
       <section>
         <link rel="stylesheet" href="/dist/main.css"></link>
@@ -20,21 +29,34 @@ async function* Controls(features = []) {
           section div {
             flex: 2
           }
+
+          #connect {
+            margin: auto;
+          }
         `}
         </style>
-        <div>
-          <fieldset>
-            <label>
-              <input type="checkbox" role="switch" />
-              Engine
-            </label>
-            <label>
-              <input type="checkbox" role="switch" checked />
-              Headlight
-            </label>
-          </fieldset>
-        </div>
-        <Throttle></Throttle>
+
+        {device ? (
+          <>
+            <div>
+              <fieldset>
+                <label>
+                  <input type="checkbox" role="switch" />
+                  Engine
+                </label>
+                <label>
+                  <input type="checkbox" role="switch" checked />
+                  Headlight
+                </label>
+              </fieldset>
+            </div>
+            <Throttle></Throttle>
+          </>
+        ) : (
+          <button id="connect" onClick={connect}>
+            Connect
+          </button>
+        )}
       </section>
     );
   }
