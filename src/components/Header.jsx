@@ -1,7 +1,7 @@
 import { render } from 'preact';
 import asWebComponent from 'as-web-component';
 
-import WakeLock from './WakeLock';
+import WakeLock from './WakeLock.jsx';
 
 function Header() {
   return (
@@ -22,6 +22,7 @@ function Header() {
           --pico-font-size: 1rem;
           flex: 2;
           text-align: center;
+          margin-bottom: 0;
         }
       `}
       </style>
