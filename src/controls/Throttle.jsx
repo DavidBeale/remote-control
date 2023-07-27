@@ -1,5 +1,5 @@
 import { render } from 'preact';
-import asWebComponent, { getDom } from 'as-web-component';
+import asWebComponent, { getDom, dispatchEvent } from 'as-web-component';
 
 async function* Throttle(speed = 0) {
   this.wakeLockDisabled = false;
@@ -329,7 +329,19 @@ async function* Throttle(speed = 0) {
         [data-icon="mute"] { --icon: var(--ico-mute); }
       `}
       </style>
-      <input type="range" value={speed} min="0" max="100" step="5" />
+      <input
+        type="range"
+        value={speed}
+        onChange={(event) =>
+          dispatchEvent(
+            this,
+            new CustomEvent('change', { detail: event.target.valueAsNumber })
+          )
+        }
+        min="0"
+        max="100"
+        step="5"
+      />
     </>
   );
 
@@ -339,7 +351,7 @@ async function* Throttle(speed = 0) {
 
   for await (const { props } of this({ speed })) {
     range.value = props.speed;
-    range.dispatchEvent(new Event('input', { bubbles: true }));
+    range.dispatchEvent(new Event('input'));
   }
 }
 

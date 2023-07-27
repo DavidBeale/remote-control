@@ -8,7 +8,7 @@ template.innerHTML = `
   <input id="switch" type="checkbox" />
 `;
 
-async function* FeatureSwitch(feature) {
+async function* SwitchFeature(feature) {
   this.checked = false;
 
   const checked = (event) => {
@@ -43,4 +43,4 @@ async function* FeatureSwitch(feature) {
   }
 }
 
-export default asWebComponent(FeatureSwitch, render);
+export default asWebComponent(SwitchFeature, render);

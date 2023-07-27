@@ -1,4 +1,5 @@
 import Multirator from 'multirator';
+import enqueue from '../utils/enqueue';
 
 const TRAIN_SERVICE_UUID = 'e4580f53-0298-41fa-8210-ce8f8bbe23a3';
 
@@ -99,14 +100,16 @@ async function loadFeatures() {
       );
     }
 
-    this.featureMap[feature.uuid].writeValue = feature.writeValue.bind(feature);
-    this.featureMap[feature.uuid].readValue = feature.readValue.bind(feature);
+    this.featureMap[feature.uuid].writeValue = (value) =>
+      enqueue(() => feature.writeValue.call(feature, value));
+    this.featureMap[feature.uuid].readValue = () =>
+      enqueue(() => feature.readValue.call(feature));
     feature.addEventListener('characteristicvaluechanged', async () => {
       this.featureMap[feature.uuid]?.resolver(feature.value);
     });
     feature.startNotifications();
 
-    feature.readValue().then(() => {
+    this.featureMap[feature.uuid].readValue().then(() => {
       this.featureMap[feature.uuid]?.resolver(feature.value);
     });
   }

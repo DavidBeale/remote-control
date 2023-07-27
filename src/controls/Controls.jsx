@@ -1,13 +1,16 @@
 import { render } from 'preact';
 import asWebComponent from 'as-web-component';
 
-import Throttle from './Throttle';
-import FeatureSwitch from './FeatureSwitch';
+import SwitchFeature from './SwitchFeature';
 import featureMap from '../services/FeatureMap.js';
+import VelocityFeature from './VelocityFeature';
 
 async function* Controls(service) {
   for await (const { props } of this({ service })) {
     const { features } = props.service;
+    const velocity = features.find(
+      (feature) => featureMap[feature.uuid]?.name === 'velocity'
+    );
 
     yield (
       <section>
@@ -21,7 +24,7 @@ async function* Controls(service) {
             margin-top: 1rem;
           }
 
-          section div {
+          #top {
             flex: 2
           }
 
@@ -31,16 +34,16 @@ async function* Controls(service) {
         `}
         </style>
 
-        <div>
+        <article id="top">
           <fieldset>
             {features
               .filter((feature) => featureMap[feature.uuid].label)
               .map((feature) => (
-                <FeatureSwitch feature={feature} />
+                <SwitchFeature feature={feature} />
               ))}
           </fieldset>
-        </div>
-        <Throttle></Throttle>
+        </article>
+        {velocity && <VelocityFeature feature={velocity} />}
       </section>
     );
   }
