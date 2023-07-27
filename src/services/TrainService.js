@@ -2,94 +2,112 @@ import Multirator from 'multirator';
 
 const TRAIN_SERVICE_UUID = 'e4580f53-0298-41fa-8210-ce8f8bbe23a3';
 
-let primaryService;
-const featureMap = {};
+export default class TrainService {
+  constructor(deviceName, statusHandler = () => {}) {
+    this.deviceName = deviceName;
+    this.statusHandler = statusHandler;
 
-export async function select(name) {
-  const device = await navigator.bluetooth.requestDevice({
-    filters: name
-      ? [{ name }]
-      : [
-          { services: [TRAIN_SERVICE_UUID] },
-          { services: ['6e400001-b5a3-f393-e0a9-e50e24dcca9e'] }
-        ]
-  });
-
-  return device;
-}
-
-export async function connect(device) {
-  console.log(`Connecting to device ${device.name}`);
-  try {
-    await device.gatt.connect();
-    console.log('Connected to device', device.name);
-
-    primaryService = await device.gatt.getPrimaryService(TRAIN_SERVICE_UUID);
-  } catch (error) {
-    console.error('Failed to connect to Device');
-    console.error(error.stack ?? error);
-    console.log('Retrying in 3secs');
-    setTimeout(async () => {
-      // Can't just call device.gatt.connect() again in WebBLE browser on iOS :-(
-      const device = await navigator.bluetooth.requestDevice({
-        filters: [{ name: device.name }]
-      });
-      connect(device);
-    }, 3000);
+    this.device;
+    this.primaryService;
+    this.featureMap = {};
   }
 
-  device.addEventListener('gattserverdisconnected', reConnect);
+  static async select(name) {
+    const device = await navigator.bluetooth.requestDevice({
+      filters: name
+        ? [{ name }]
+        : [
+            { services: [TRAIN_SERVICE_UUID] },
+            { services: ['6e400001-b5a3-f393-e0a9-e50e24dcca9e'] }
+          ]
+    });
 
-  await loadFeatures();
+    return device;
+  }
+
+  get isConnected() {
+    return this.device?.gatt?.connected ?? false;
+  }
+
+  get features() {
+    return Object.values(this.featureMap);
+  }
+
+  async connect(device) {
+    this.device = device;
+    console.log('Connecting to device', this.device?.name);
+    try {
+      await this.device.gatt.connect();
+      console.log('Connected to device', this.device?.name);
+
+      this.primaryService = await this.device.gatt.getPrimaryService(
+        TRAIN_SERVICE_UUID
+      );
+
+      this.device.addEventListener(
+        'gattserverdisconnected',
+        reConnect.bind(this)
+      );
+
+      await loadFeatures.call(this);
+      this.statusHandler({
+        isConnected: this.isConnected
+      });
+    } catch (error) {
+      console.error('Failed to connect to Device');
+      console.error(error.stack ?? error);
+      console.log('Retrying in 3secs');
+      setTimeout(async () => {
+        // Can't just call device.gatt.connect() again in WebBLE browser on iOS :-(
+        const newDevice = await navigator.bluetooth.requestDevice({
+          filters: [{ name: this.device.name }]
+        });
+        this.connect(newDevice);
+      }, 3000);
+    }
+  }
+
+  async disconnect() {
+    this.device.removeEventListener('gattserverdisconnected', reConnect);
+
+    await this.device.disconnect();
+  }
 }
 
-export async function disconnect(device) {
-  device.removeEventListener('gattserverdisconnected', reConnect);
-
-  await device.disconnect();
-  device = null;
-  primaryService = null;
-}
-
-export function getFeatures() {
-  return Object.values(featureMap);
-}
-
-function reConnect(device) {
-  console.log('Disconnected from device', device.name);
-  primaryService = null;
-  connect();
+function reConnect() {
+  console.log('Disconnected from device', this.device?.name ?? 'Unknown');
+  this.connect(this.device);
 }
 
 async function loadFeatures() {
-  const features = await primaryService.getCharacteristics();
+  const features = await this.primaryService.getCharacteristics();
 
   for (const feature of features) {
-    if (!featureMap[feature.uuid]) {
-      featureMap[feature.uuid] = {
+    if (!this.featureMap[feature.uuid]) {
+      this.featureMap[feature.uuid] = {
         uuid: feature.uuid
       };
-      featureMap[feature.uuid].value = new Multirator(
-        (async function* emit() {
+      this.featureMap[feature.uuid].value = new Multirator(
+        async function* emit() {
           if (feature.value) yield feature.value;
           while (true) {
             yield new Promise((resolve) => {
-              featureMap[feature.uuid].resolver = resolve;
+              this.featureMap[feature.uuid].resolver = resolve;
             });
           }
-        })()
+        }.call(this)
       );
     }
 
-    featureMap[feature.uuid].writeValue = feature.writeValue.bind(feature);
-    featureMap[feature.uuid].readValue = feature.readValue.bind(feature);
+    this.featureMap[feature.uuid].writeValue = feature.writeValue.bind(feature);
+    this.featureMap[feature.uuid].readValue = feature.readValue.bind(feature);
     feature.addEventListener('characteristicvaluechanged', async () => {
-      featureMap[feature.uuid]?.resolver(feature.value);
+      this.featureMap[feature.uuid]?.resolver(feature.value);
     });
     feature.startNotifications();
 
     feature.readValue().then(() => {
-      featureMap[feature.uuid]?.resolver(feature.value);
+      this.featureMap[feature.uuid]?.resolver(feature.value);
     });
   }
 }

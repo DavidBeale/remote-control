@@ -335,7 +335,7 @@ async function* Throttle(speed = 0) {
 
   const range = getDom(this).querySelector('input');
 
-  new RangeSlider(range, { range: 'circular' });
+  // new RangeSlider(range, { range: 'circular' });
 
   for await (const { props } of this({ speed })) {
     range.value = props.speed;
