@@ -2,6 +2,8 @@ import { render } from 'preact';
 import asWebComponent from 'as-web-component';
 
 import Throttle from './Throttle';
+import FeatureSwitch from './FeatureSwitch';
+import featureMap from '../services/FeatureMap.js';
 
 async function* Controls(service) {
   for await (const { props } of this({ service })) {
@@ -30,16 +32,12 @@ async function* Controls(service) {
         </style>
 
         <div>
-          {features.length}
           <fieldset>
-            <label>
-              <input type="checkbox" role="switch" />
-              Engine
-            </label>
-            <label>
-              <input type="checkbox" role="switch" checked />
-              Headlight
-            </label>
+            {features
+              .filter((feature) => featureMap[feature.uuid].label)
+              .map((feature) => (
+                <FeatureSwitch feature={feature} />
+              ))}
           </fieldset>
         </div>
         <Throttle></Throttle>
