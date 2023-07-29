@@ -1,7 +1,7 @@
 import { render } from 'preact';
 import asWebComponent, { dispatchEvent } from 'as-web-component';
 
-async function* DeviceSelector(devices, currentDeviceName) {
+async function DeviceSelector(devices, currentDeviceName) {
   const select = (name) => {
     dispatchEvent(
       this,
@@ -13,12 +13,11 @@ async function* DeviceSelector(devices, currentDeviceName) {
     );
   };
 
-  for await (const { props } of this({ devices, currentDeviceName })) {
-    yield (
-      <>
-        <link rel="stylesheet" href="/dist/main.css"></link>
-        <style>
-          {`
+  return (
+    <>
+      <link rel="stylesheet" href="/dist/main.css"></link>
+      <style>
+        {`
           @namespace css url(http://www.w3.org/2000/css);
   
           :host {
@@ -43,25 +42,24 @@ async function* DeviceSelector(devices, currentDeviceName) {
           }
         }
         `}
-        </style>
+      </style>
 
-        <nav>
-          <div role="group">
-            {props.devices.map((name) => {
-              if (name === props.currentDeviceName) {
-                return <button aria-current="true">{name}</button>;
-              }
-              return (
-                <button class="secondary" onClick={() => select(name)}>
-                  {name}
-                </button>
-              );
-            })}
-          </div>
-        </nav>
-      </>
-    );
-  }
+      <nav>
+        <div role="group">
+          {devices.map((name) => {
+            if (name === currentDeviceName) {
+              return <button aria-current="true">{name}</button>;
+            }
+            return (
+              <button class="secondary" onClick={() => select(name)}>
+                {name}
+              </button>
+            );
+          })}
+        </div>
+      </nav>
+    </>
+  );
 }
 
 export default asWebComponent(DeviceSelector, render);

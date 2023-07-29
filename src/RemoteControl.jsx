@@ -27,7 +27,6 @@ async function* RemoteControl() {
 
   for await (const { currentDeviceName } of this) {
     const service = deviceToServiceMap[currentDeviceName];
-
     yield (
       <>
         <link rel="stylesheet" href="/dist/main.css"></link>
