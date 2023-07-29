@@ -19,12 +19,8 @@ async function Controls(service) {
           section {
             display: flex;
             flex-direction: column;
-            height: calc(100vh - 6rem);
-            margin-top: 1rem;
-          }
-
-          #top {
-            flex: 2
+            padding-block: 1rem;
+            height: 100%;
           }
 
           #connect {
@@ -32,12 +28,13 @@ async function Controls(service) {
           }
 
           article {
+            flex: 1;
             --pico-block-spacing-vertical: var(--pico-spacing);
           }
         `}
       </style>
 
-      <article id="top">
+      <article>
         <fieldset>
           {features
             .filter((feature) => featureMap[feature.uuid].label)

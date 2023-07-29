@@ -16,13 +16,7 @@ async function Connect(service) {
         {`
           section {
             display: flex;
-            flex-direction: column;
-            height: calc(100vh - 5rem);
-            margin-top: 1rem;
-          }
-
-          section div {
-            flex: 2
+            height: 100%;
           }
 
           button {

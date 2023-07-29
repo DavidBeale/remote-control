@@ -9,7 +9,6 @@ async function* Throttle(speed = 0) {
         {`
         :host {
           display: block;
-          margin-block: 2rem;
         }
 
         .c-rng {

@@ -4,12 +4,6 @@ import featureMap from '../services/FeatureMap.js';
 import Throttle from './Throttle';
 import Direction from './Direction.jsx';
 
-const template = document.createElement('template');
-template.innerHTML = `
-  <label id="label" for="switch"></label>
-  <input id="switch" type="checkbox" />
-`;
-
 async function* VelocityFeature(feature) {
   this.speed = 0;
   this.direction = 1;
@@ -41,6 +35,14 @@ async function* VelocityFeature(feature) {
     yield (
       <article>
         <link rel="stylesheet" href="/dist/main.css"></link>
+        <style>
+          {`
+            article {
+              margin-bottom: 0;
+              --pico-block-spacing-vertical: var(--pico-spacing);
+            }        
+        `}
+        </style>
         <Direction
           direction={this.direction}
           disabled={directionDisabled}

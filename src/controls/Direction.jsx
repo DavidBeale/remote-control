@@ -9,6 +9,7 @@ async function Direction(direction, disabled) {
         {`
         :host {
           display: block;
+          margin-bottom: 1rem;
         }
 
         datalist {

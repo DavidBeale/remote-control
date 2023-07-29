@@ -30,6 +30,27 @@ async function* RemoteControl() {
     yield (
       <>
         <link rel="stylesheet" href="/dist/main.css"></link>
+
+        <style>
+          {`
+           :host {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+           }
+
+           main {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+           }
+
+           main :nth-child(2) {
+            flex: 1;
+           }
+          `}
+        </style>
+
         <Header></Header>
         <main class="container-fluid">
           <DeviceSelector
