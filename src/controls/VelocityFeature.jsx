@@ -2,6 +2,7 @@ import { render } from 'preact';
 import asWebComponent from 'as-web-component';
 import featureMap from '../services/FeatureMap.js';
 import Throttle from './Throttle';
+import Direction from './Direction.jsx';
 
 const template = document.createElement('template');
 template.innerHTML = `
@@ -13,24 +14,39 @@ async function* VelocityFeature(feature) {
   this.speed = 0;
   this.direction = 1;
 
-  const change = (event) => {
+  const changeSpeed = (event) => {
     this.speed = event.detail;
     this.props.feature.writeValue(
       Int8Array.from([this.speed * this.direction])
     );
   };
 
+  const changeDirection = (event) => {
+    this.direction = event.detail;
+    this.props.feature.writeValue(
+      Int8Array.from([this.speed * this.direction])
+    );
+  };
+
+  [this.speed, this.direction] = splitValues(await feature.readValue());
+
   for await (const { props } of this(feature)) {
-    [this.speed, this.direction] = splitValues(await props.feature.readValue());
     props.feature.value.map((value) => {
       [this.speed, this.direction] = splitValues(value);
       return null;
     });
 
+    const directionDisabled = this.speed !== 0;
+
     yield (
       <article>
         <link rel="stylesheet" href="/dist/main.css"></link>
-        <Throttle speed={this.speed} onChange={change}></Throttle>
+        <Direction
+          direction={this.direction}
+          disabled={directionDisabled}
+          onChange={changeDirection}
+        />
+        <Throttle speed={this.speed} onChange={changeSpeed} />
       </article>
     );
   }

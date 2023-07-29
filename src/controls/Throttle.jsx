@@ -2,8 +2,6 @@ import { render } from 'preact';
 import asWebComponent, { getDom, dispatchEvent } from 'as-web-component';
 
 async function* Throttle(speed = 0) {
-  this.wakeLockDisabled = false;
-
   yield (
     <>
       <link rel="stylesheet" href="/dist/main.css"></link>
@@ -206,7 +204,7 @@ async function* Throttle(speed = 0) {
         */
         .c-rng--circular {
           --circle-bgc: var(--pico-background-color);
-          --circle-size: calc(100vw - 40px);
+          --circle-size: calc(100vw - 70px);
           --track-bgc: hsl(219, 20%, 85%);
           --track-fill: var(--pico-primary-background);
           --thumb-size: 30px;
