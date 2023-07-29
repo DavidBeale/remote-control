@@ -8,8 +8,8 @@ export default class TrainService {
     this.deviceName = deviceName;
     this.statusHandler = statusHandler;
 
-    this.device;
-    this.primaryService;
+    this.device = undefined;
+    this.primaryService = undefined;
     this.featureMap = {};
   }
 

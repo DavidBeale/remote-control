@@ -26,7 +26,6 @@ test-report.xml
 build/Release
 tmp
 dist
-!docs/dist
 build
 .env
 cypress/videos

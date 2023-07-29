@@ -9,8 +9,9 @@
   "scripts": {
     "test": "npm run lint && npm run build",
     "start": "esbuild src/main.js --bundle --outdir=src/dist --jsx-import-source=preact --jsx=automatic --watch --servedir=src",
-    "build": "esbuild src/main.js --bundle --outdir=dist --jsx-import-source=preact --jsx=automatic",
-    "lint": "eslint ."
+    "build": "esbuild src/main.js --bundle --outdir=dist/dist --jsx-import-source=preact --jsx=automatic && cp src/index.html dist/",
+    "lint": "eslint src",
+    "deploy": "gh-pages -d dist"
   },
   "repository": {
     "type": "git",
@@ -28,7 +29,8 @@
     "eslint": "^8.45.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^8.8.0",
-    "eslint-plugin-prettier": "^5.0.0"
+    "eslint-plugin-prettier": "^5.0.0",
+    "gh-pages": "^5.0.0"
   },
   "dependencies": {
     "@picocss/pico": "^2.0.0-alpha1",
