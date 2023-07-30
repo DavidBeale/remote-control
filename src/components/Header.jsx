@@ -3,6 +3,8 @@ import asWebComponent from 'as-web-component';
 
 import WakeLock from './WakeLock.jsx';
 
+import pdk from '../../package.json';
+
 function Header() {
   return (
     <>
@@ -28,7 +30,7 @@ function Header() {
       </style>
 
       <header>
-        <h1>Remote Control</h1>
+        <h1>BLE Remote Control ({pdk.version})</h1>
         <WakeLock></WakeLock>
       </header>
     </>
