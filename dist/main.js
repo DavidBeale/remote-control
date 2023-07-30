@@ -838,7 +838,23 @@
       /* @__PURE__ */ o2("style", { children: `
         :host {
           display: block;
-          margin-block: 2rem;
+          position: relative;
+        }
+
+        #stop {
+          --pico-background-color: red;
+          --pico-border-color: darkred;
+
+          position: absolute;
+          left: 0;
+          right: 0;
+          top: 0;
+          bottom: 20px;
+          margin: auto;
+          width: 5rem;
+          height: 5rem;
+          border-radius: 100%;
+          z-index: 100;
         }
 
         .c-rng {
@@ -1051,7 +1067,8 @@
           width: var(--circle-size);
         }
         .c-rng--circular::before {
-          align-items: center;
+          align-items: self-end;
+          padding-bottom: 1rem;
           background-color: var(--circle-bgc);
           border-radius: 50%;
           content: attr(data-value);
@@ -1168,6 +1185,14 @@
           max: "100",
           step: "5"
         }
+      ),
+      /* @__PURE__ */ o2(
+        "button",
+        {
+          id: "stop",
+          onClick: () => dispatchEvent(this, new CustomEvent("change", { detail: 0 })),
+          children: "Stop"
+        }
       )
     ] });
     const range = getDom(this).querySelector("input");
@@ -1281,7 +1306,7 @@
           "pointerup",
           () => this.output.removeEventListener("pointermove", pointerMove)
         );
-        range.addEventListener("input", (event) => this.updateCircle(0));
+        range.addEventListener("input", () => this.updateCircle(0));
         this.updateCircle();
       } else {
         range.addEventListener("input", () => this.updateRange());
@@ -1389,6 +1414,7 @@
       /* @__PURE__ */ o2("style", { children: `
         :host {
           display: block;
+          margin-bottom: 1rem;
         }
 
         datalist {
@@ -1431,11 +1457,6 @@
   var Direction_default = asWebComponent(Direction, D);
 
   // src/controls/VelocityFeature.jsx
-  var template2 = document.createElement("template");
-  template2.innerHTML = `
-  <label id="label" for="switch"></label>
-  <input id="switch" type="checkbox" />
-`;
   async function* VelocityFeature(feature) {
     this.speed = 0;
     this.direction = 1;
@@ -1460,6 +1481,12 @@
       const directionDisabled = this.speed !== 0;
       yield /* @__PURE__ */ o2("article", { children: [
         /* @__PURE__ */ o2("link", { rel: "stylesheet", href: "/dist/main.css" }),
+        /* @__PURE__ */ o2("style", { children: `
+            article {
+              margin-bottom: 0;
+              --pico-block-spacing-vertical: var(--pico-spacing);
+            }        
+        ` }),
         /* @__PURE__ */ o2(
           Direction_default,
           {
@@ -1495,12 +1522,8 @@
           section {
             display: flex;
             flex-direction: column;
-            height: calc(100vh - 6rem);
-            margin-top: 1rem;
-          }
-
-          #top {
-            flex: 2
+            padding-block: 1rem;
+            height: 100%;
           }
 
           #connect {
@@ -1508,10 +1531,11 @@
           }
 
           article {
+            flex: 1;
             --pico-block-spacing-vertical: var(--pico-spacing);
           }
         ` }),
-      /* @__PURE__ */ o2("article", { id: "top", children: /* @__PURE__ */ o2("fieldset", { children: features.filter((feature) => FeatureMap_default[feature.uuid].label).map((feature) => /* @__PURE__ */ o2(SwitchFeature_default, { feature })) }) }),
+      /* @__PURE__ */ o2("article", { children: /* @__PURE__ */ o2("fieldset", { children: features.filter((feature) => FeatureMap_default[feature.uuid].label).map((feature) => /* @__PURE__ */ o2(SwitchFeature_default, { feature })) }) }),
       velocity && /* @__PURE__ */ o2(VelocityFeature_default, { feature: velocity })
     ] });
   }
@@ -1734,13 +1758,7 @@
       /* @__PURE__ */ o2("style", { children: `
           section {
             display: flex;
-            flex-direction: column;
-            height: calc(100vh - 5rem);
-            margin-top: 1rem;
-          }
-
-          section div {
-            flex: 2
+            height: 100%;
           }
 
           button {
@@ -1771,6 +1789,23 @@
       const service = deviceToServiceMap[currentDeviceName];
       yield /* @__PURE__ */ o2(k, { children: [
         /* @__PURE__ */ o2("link", { rel: "stylesheet", href: "/dist/main.css" }),
+        /* @__PURE__ */ o2("style", { children: `
+           :host {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+           }
+
+           main {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+           }
+
+           main :nth-child(2) {
+            flex: 1;
+           }
+          ` }),
         /* @__PURE__ */ o2(Header_default, {}),
         /* @__PURE__ */ o2("main", { class: "container-fluid", children: [
           /* @__PURE__ */ o2(
@@ -1789,8 +1824,10 @@
   var RemoteControl_default = asWebComponent(RemoteControl, D);
 
   // src/main.js
-  new EventSource("/esbuild").addEventListener(
-    "change",
-    () => window.location.reload()
-  );
+  if (window.location.hostname === "localhost") {
+    new EventSource("/esbuild").addEventListener(
+      "change",
+      () => window.location.reload()
+    );
+  }
 })();
