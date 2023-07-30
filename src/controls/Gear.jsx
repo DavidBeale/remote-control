@@ -1,7 +1,11 @@
 import { render } from 'preact';
 import asWebComponent, { dispatchEvent } from 'as-web-component';
 
-async function Direction(direction, disabled) {
+async function Direction(gear, gears = {}, disabled = false, step = 1) {
+  const gearEntries = Object.entries(gears);
+  const min = Math.min(...gearEntries.map(([, value]) => value));
+  const max = Math.max(...gearEntries.map(([, value]) => value));
+
   return (
     <>
       <link rel="stylesheet" href="/dist/main.css"></link>
@@ -30,7 +34,7 @@ async function Direction(direction, disabled) {
       </style>
       <input
         type="range"
-        value={direction}
+        value={gear}
         disabled={disabled}
         onChange={(event) =>
           dispatchEvent(
@@ -38,14 +42,15 @@ async function Direction(direction, disabled) {
             new CustomEvent('change', { detail: event.target.valueAsNumber })
           )
         }
-        min="-1"
-        max="1"
-        step="2"
+        min={min}
+        max={max}
+        step={step}
         list="markers"
       />
       <datalist id="markers">
-        <option value="-1">Reverse</option>
-        <option value="1">Forward</option>
+        {gearEntries.map(([label, value]) => (
+          <option value={value}>{label}</option>
+        ))}
       </datalist>
     </>
   );

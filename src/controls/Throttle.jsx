@@ -219,9 +219,9 @@ async function* Throttle(speed = 0) {
         ========
         */
         .c-rng--circular {
-          --circle-bgc: var(--pico-background-color);
+          --circle-bgc: var(--pico-card-background-color);
           --circle-size: calc(100vw - 70px);
-          --track-bgc: hsl(219, 20%, 85%);
+          --track-bgc: var(--pico-switch-background-color);
           --track-fill: var(--pico-primary-background);
           --thumb-size: 30px;
   

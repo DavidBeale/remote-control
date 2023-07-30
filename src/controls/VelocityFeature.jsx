@@ -2,7 +2,7 @@ import { render } from 'preact';
 import asWebComponent from 'as-web-component';
 import featureMap from '../services/FeatureMap.js';
 import Throttle from './Throttle';
-import Direction from './Direction.jsx';
+import Gear from './Gear.jsx';
 
 async function* VelocityFeature(feature) {
   this.speed = 0;
@@ -43,8 +43,13 @@ async function* VelocityFeature(feature) {
             }        
         `}
         </style>
-        <Direction
-          direction={this.direction}
+        <Gear
+          gear={this.direction}
+          gears={{
+            Reverse: -1,
+            Forward: 1
+          }}
+          step={2}
           disabled={directionDisabled}
           onChange={changeDirection}
         />
