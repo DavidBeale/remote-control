@@ -9,6 +9,23 @@ async function* Throttle(speed = 0) {
         {`
         :host {
           display: block;
+          position: relative;
+        }
+
+        #stop {
+          --pico-background-color: red;
+          --pico-border-color: darkred;
+
+          position: absolute;
+          left: 0;
+          right: 0;
+          top: 0;
+          bottom: 20px;
+          margin: auto;
+          width: 5rem;
+          height: 5rem;
+          border-radius: 100%;
+          z-index: 100;
         }
 
         .c-rng {
@@ -221,7 +238,8 @@ async function* Throttle(speed = 0) {
           width: var(--circle-size);
         }
         .c-rng--circular::before {
-          align-items: center;
+          align-items: self-end;
+          padding-bottom: 1rem;
           background-color: var(--circle-bgc);
           border-radius: 50%;
           content: attr(data-value);
@@ -339,6 +357,14 @@ async function* Throttle(speed = 0) {
         max="100"
         step="5"
       />
+      <button
+        id="stop"
+        onClick={() =>
+          dispatchEvent(this, new CustomEvent('change', { detail: 0 }))
+        }
+      >
+        Stop
+      </button>
     </>
   );
 
@@ -486,7 +512,7 @@ class RangeSlider {
         this.output.removeEventListener('pointermove', pointerMove)
       );
 
-      range.addEventListener('input', (event) => this.updateCircle(0));
+      range.addEventListener('input', () => this.updateCircle(0));
 
       this.updateCircle();
     } else {
