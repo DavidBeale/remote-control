@@ -1048,9 +1048,9 @@
         ========
         */
         .c-rng--circular {
-          --circle-bgc: var(--pico-background-color);
+          --circle-bgc: var(--pico-card-background-color);
           --circle-size: calc(100vw - 70px);
-          --track-bgc: hsl(219, 20%, 85%);
+          --track-bgc: var(--pico-switch-background-color);
           --track-fill: var(--pico-primary-background);
           --thumb-size: 30px;
   
@@ -1407,8 +1407,11 @@
     );
   }
 
-  // src/controls/Direction.jsx
-  async function Direction(direction, disabled) {
+  // src/controls/Gear.jsx
+  async function Direction(gear, gears = {}, disabled = false, step = 1) {
+    const gearEntries = Object.entries(gears);
+    const min = Math.min(...gearEntries.map(([, value]) => value));
+    const max = Math.max(...gearEntries.map(([, value]) => value));
     return /* @__PURE__ */ o2(k, { children: [
       /* @__PURE__ */ o2("link", { rel: "stylesheet", href: "/dist/main.css" }),
       /* @__PURE__ */ o2("style", { children: `
@@ -1436,25 +1439,22 @@
         "input",
         {
           type: "range",
-          value: direction,
+          value: gear,
           disabled,
           onChange: (event) => dispatchEvent(
             this,
             new CustomEvent("change", { detail: event.target.valueAsNumber })
           ),
-          min: "-1",
-          max: "1",
-          step: "2",
+          min,
+          max,
+          step,
           list: "markers"
         }
       ),
-      /* @__PURE__ */ o2("datalist", { id: "markers", children: [
-        /* @__PURE__ */ o2("option", { value: "-1", children: "Reverse" }),
-        /* @__PURE__ */ o2("option", { value: "1", children: "Forward" })
-      ] })
+      /* @__PURE__ */ o2("datalist", { id: "markers", children: gearEntries.map(([label, value]) => /* @__PURE__ */ o2("option", { value, children: label })) })
     ] });
   }
-  var Direction_default = asWebComponent(Direction, D);
+  var Gear_default = asWebComponent(Direction, D);
 
   // src/controls/VelocityFeature.jsx
   async function* VelocityFeature(feature) {
@@ -1488,9 +1488,14 @@
             }        
         ` }),
         /* @__PURE__ */ o2(
-          Direction_default,
+          Gear_default,
           {
-            direction: this.direction,
+            gear: this.direction,
+            gears: {
+              Reverse: -1,
+              Forward: 1
+            },
+            step: 2,
             disabled: directionDisabled,
             onChange: changeDirection
           }
