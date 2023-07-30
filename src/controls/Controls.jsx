@@ -30,6 +30,11 @@ async function Controls(service) {
           article {
             flex: 1;
             --pico-block-spacing-vertical: var(--pico-spacing);
+            padding-bottom: 0;
+          }
+
+          fieldset {
+            margin-bottom: 0;
           }
         `}
       </style>
