@@ -692,6 +692,49 @@
   }
   var WakeLock_default = asWebComponent(WakeLock, D);
 
+  // package.json
+  var package_default = {
+    name: "remote-control",
+    version: "1.1.0",
+    description: "BLE Remote Control",
+    main: "src/index.html",
+    directories: {
+      doc: "docs"
+    },
+    scripts: {
+      test: "npm run lint && npm run build",
+      start: "esbuild src/main.js --bundle --outdir=public/dist --jsx-import-source=preact --jsx=automatic --watch --servedir=public",
+      build: "esbuild src/main.js --bundle --outdir=dist/dist --jsx-import-source=preact --jsx=automatic && cp -r public/. dist/",
+      lint: "eslint src",
+      deploy: "gh-pages -d dist"
+    },
+    repository: {
+      type: "git",
+      url: "git+https://github.com/DavidBeale/remote-control.git"
+    },
+    author: "David Beale",
+    license: "MIT",
+    bugs: {
+      url: "https://github.com/DavidBeale/remote-control/issues"
+    },
+    homepage: "https://github.com/DavidBeale/remote-control#readme",
+    devDependencies: {
+      "browser-sync": "^2.27.9",
+      esbuild: "^0.18.16",
+      eslint: "^8.45.0",
+      "eslint-config-airbnb": "^19.0.4",
+      "eslint-config-prettier": "^8.8.0",
+      "eslint-plugin-prettier": "^5.0.0",
+      "gh-pages": "^5.0.0"
+    },
+    dependencies: {
+      "@picocss/pico": "^2.0.0-alpha1",
+      "as-web-component": "^0.5.1",
+      multirator: "^0.1.0",
+      preact: "^10.16.0"
+    }
+  };
+
   // src/components/Header.jsx
   function Header() {
     return /* @__PURE__ */ o2(k, { children: [
@@ -714,7 +757,11 @@
         }
       ` }),
       /* @__PURE__ */ o2("header", { children: [
-        /* @__PURE__ */ o2("h1", { children: "Remote Control" }),
+        /* @__PURE__ */ o2("h1", { children: [
+          "BLE Remote Control (",
+          package_default.version,
+          ")"
+        ] }),
         /* @__PURE__ */ o2(WakeLock_default, {})
       ] })
     ] });
