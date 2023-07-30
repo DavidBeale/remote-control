@@ -9,6 +9,7 @@ async function* WakeLock() {
       await navigator.wakeLock.request('screen');
       this.wakeLockDisabled = false;
     } catch (error) {
+      console.error('WakeLock', error);
       this.wakeLockDisabled = true;
     }
   };
