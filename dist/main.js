@@ -695,7 +695,7 @@
   // package.json
   var package_default = {
     name: "remote-control",
-    version: "1.1.0",
+    version: "1.1.1",
     description: "BLE Remote Control",
     main: "src/index.html",
     directories: {
@@ -1586,6 +1586,11 @@
           article {
             flex: 1;
             --pico-block-spacing-vertical: var(--pico-spacing);
+            padding-bottom: 0;
+          }
+
+          fieldset {
+            margin-bottom: 0;
           }
         ` }),
       /* @__PURE__ */ o2("article", { children: /* @__PURE__ */ o2("fieldset", { children: features.filter((feature) => FeatureMap_default[feature.uuid].label).map((feature) => /* @__PURE__ */ o2(SwitchFeature_default, { feature })) }) }),
