@@ -2,9 +2,11 @@ import { render } from 'preact';
 import asWebComponent from 'as-web-component';
 
 import TrainService from '../services/TrainService.js';
+import { disableScreenLock } from '../services/WakeLockService.js';
 
 async function Connect(service) {
   const connect = async () => {
+    disableScreenLock();
     const device = await TrainService.select();
     service.connect(device);
   };

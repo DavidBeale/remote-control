@@ -1,22 +1,14 @@
 import { render } from 'preact';
 import asWebComponent from 'as-web-component';
+import { screenLockDisabled } from '../services/WakeLockService';
+import { effect } from '@preact/signals';
 
 async function* WakeLock() {
   this.wakeLockDisabled = false;
 
-  const checkWakeLock = async () => {
-    try {
-      await navigator.wakeLock.request('screen');
-      this.wakeLockDisabled = false;
-    } catch (error) {
-      console.error('WakeLock', error);
-      this.wakeLockDisabled = true;
-    }
-  };
-
-  setInterval(checkWakeLock, 30000);
-
-  checkWakeLock();
+  effect(() => {
+    this.wakeLockDisabled = screenLockDisabled.value;
+  });
 
   for await (const { wakeLockDisabled } of this) {
     yield (
@@ -36,7 +28,7 @@ async function* WakeLock() {
         </style>
 
         <span>🔅</span>
-        {wakeLockDisabled && <span>🚫</span>}
+        {!wakeLockDisabled && <span>🚫</span>}
       </>
     );
   }
