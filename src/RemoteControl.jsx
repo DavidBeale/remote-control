@@ -1,5 +1,6 @@
 import { render } from 'preact';
 import asWebComponent from 'as-web-component';
+import { effect } from '@preact/signals';
 
 import Header from './components/Header.jsx';
 import DeviceSelector from './components/DeviceSelector.jsx';
@@ -20,12 +21,17 @@ async function* RemoteControl() {
   );
 
   [this.currentDeviceName = ''] = knownDevices;
+  this.selectOpen = false;
 
   const changeDevice = (name) => {
     this.currentDeviceName = name;
   };
 
-  for await (const { currentDeviceName } of this) {
+  effect(() => {
+    this.selectOpen = TrainService.selectOpen.value;
+  });
+
+  for await (const { currentDeviceName, selectOpen } of this) {
     const service = deviceToServiceMap[currentDeviceName];
     yield (
       <>
@@ -37,6 +43,7 @@ async function* RemoteControl() {
             display: flex;
             flex-direction: column;
             height: 100%;
+            ${selectOpen ? 'opacity: 10%;' : ''}
            }
 
            main {

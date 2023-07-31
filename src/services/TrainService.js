@@ -1,4 +1,5 @@
 import Multirator from 'multirator';
+import { signal } from '@preact/signals';
 import enqueue from '../utils/enqueue';
 
 const TRAIN_SERVICE_UUID = 'e4580f53-0298-41fa-8210-ce8f8bbe23a3';
@@ -14,17 +15,24 @@ export default class TrainService {
   }
 
   static async select(name) {
-    const device = await navigator.bluetooth.requestDevice({
-      filters: name
-        ? [{ name }]
-        : [
-            { services: [TRAIN_SERVICE_UUID] },
-            { services: ['6e400001-b5a3-f393-e0a9-e50e24dcca9e'] }
-          ]
-    });
+    TrainService.selectOpen.value = true;
+    try {
+      const device = await navigator.bluetooth.requestDevice({
+        filters: name
+          ? [{ name }]
+          : [
+              { services: [TRAIN_SERVICE_UUID] },
+              { services: ['6e400001-b5a3-f393-e0a9-e50e24dcca9e'] }
+            ]
+      });
 
-    return device;
+      return device;
+    } finally {
+      TrainService.selectOpen.value = false;
+    }
   }
+
+  static selectOpen = signal(false);
 
   get isConnected() {
     return this.device?.gatt?.connected ?? false;
@@ -60,9 +68,7 @@ export default class TrainService {
       console.log('Retrying in 3secs');
       setTimeout(async () => {
         // Can't just call device.gatt.connect() again in WebBLE browser on iOS :-(
-        const newDevice = await navigator.bluetooth.requestDevice({
-          filters: [{ name: this.device.name }]
-        });
+        const newDevice = await TrainService.select(this.device.name);
         this.connect(newDevice);
       }, 3000);
     }
