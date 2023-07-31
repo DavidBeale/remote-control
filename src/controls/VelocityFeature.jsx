@@ -1,19 +1,20 @@
 import { render } from 'preact';
 import asWebComponent from 'as-web-component';
 import featureMap from '../services/FeatureMap.js';
-import Throttle from './Throttle';
+import Throttle from './Throttle.jsx';
 import Gear from './Gear.jsx';
+import throttle from '../utils/throttle.js';
 
 async function* VelocityFeature(feature) {
   this.speed = 0;
   this.direction = 1;
 
-  const changeSpeed = (event) => {
+  const changeSpeed = throttle((event) => {
     this.speed = event.detail;
     this.props.feature.writeValue(
       Int8Array.from([this.speed * this.direction])
     );
-  };
+  }, 100);
 
   const changeDirection = (event) => {
     this.direction = event.detail;
