@@ -43,7 +43,7 @@ async function* RemoteControl() {
             display: flex;
             flex-direction: column;
             height: 100%;
-            ${selectOpen ? 'opacity: 10%;' : ''}
+            ${selectOpen ? 'opacity: 10%; pointer-events: none;' : ''}
            }
 
            main {
