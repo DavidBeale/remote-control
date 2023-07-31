@@ -10,6 +10,7 @@ async function* Throttle(speed = 0) {
         :host {
           display: block;
           position: relative;
+          text-align: center;
         }
 
         #stop {

@@ -46,10 +46,11 @@ async function* RemoteControl() {
             ${selectOpen ? 'opacity: 10%; pointer-events: none;' : ''}
            }
 
-           main {
+           main.container-fluid {
             height: 100%;
             display: flex;
             flex-direction: column;
+            padding-inline: .5rem;
            }
 
            main :nth-child(2) {

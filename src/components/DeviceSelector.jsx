@@ -27,7 +27,7 @@ async function DeviceSelector(devices, currentDeviceName) {
           nav {
             border-bottom: 2px solid var(--pico-primary-hover-background);;
             width: 100%;
-            margin-top: var(--pico-spacing);
+            margin-top: .5rem;
             padding-inline: 0.5rem;
           }
   

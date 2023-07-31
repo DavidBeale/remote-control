@@ -39,7 +39,7 @@ async function* VelocityFeature(feature) {
           {`
             article {
               margin-bottom: 0;
-              --pico-block-spacing-vertical: var(--pico-spacing);
+              --pico-block-spacing-vertical: .5rem;
             }        
         `}
         </style>

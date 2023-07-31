@@ -19,7 +19,7 @@ async function Controls(service) {
           section {
             display: flex;
             flex-direction: column;
-            padding-block: 1rem;
+            padding-block: .5rem;
             height: 100%;
           }
 
@@ -29,7 +29,7 @@ async function Controls(service) {
 
           article {
             flex: 1;
-            --pico-block-spacing-vertical: var(--pico-spacing);
+            --pico-block-spacing-vertical: .5rem;
             padding-bottom: 0;
           }
 
