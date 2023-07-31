@@ -1338,7 +1338,7 @@
   // package.json
   var package_default = {
     name: "remote-control",
-    version: "1.1.3",
+    version: "1.1.4",
     description: "BLE Remote Control",
     main: "src/index.html",
     directories: {
@@ -2356,7 +2356,7 @@
 
   // src/services/TrainService.js
   var TRAIN_SERVICE_UUID = "e4580f53-0298-41fa-8210-ce8f8bbe23a3";
-  var TrainService = class {
+  var TrainService = class _TrainService {
     constructor(deviceName, statusHandler = () => {
     }) {
       this.deviceName = deviceName;
@@ -2366,14 +2366,20 @@
       this.featureMap = {};
     }
     static async select(name) {
-      const device = await navigator.bluetooth.requestDevice({
-        filters: name ? [{ name }] : [
-          { services: [TRAIN_SERVICE_UUID] },
-          { services: ["6e400001-b5a3-f393-e0a9-e50e24dcca9e"] }
-        ]
-      });
-      return device;
+      _TrainService.selectOpen.value = true;
+      try {
+        const device = await navigator.bluetooth.requestDevice({
+          filters: name ? [{ name }] : [
+            { services: [TRAIN_SERVICE_UUID] },
+            { services: ["6e400001-b5a3-f393-e0a9-e50e24dcca9e"] }
+          ]
+        });
+        return device;
+      } finally {
+        _TrainService.selectOpen.value = false;
+      }
     }
+    static selectOpen = u3(false);
     get isConnected() {
       return this.device?.gatt?.connected ?? false;
     }
@@ -2402,9 +2408,7 @@
         console.error(error.stack ?? error);
         console.log("Retrying in 3secs");
         setTimeout(async () => {
-          const newDevice = await navigator.bluetooth.requestDevice({
-            filters: [{ name: this.device.name }]
-          });
+          const newDevice = await _TrainService.select(this.device.name);
           this.connect(newDevice);
         }, 3e3);
       }
@@ -2485,10 +2489,14 @@
       ])
     );
     [this.currentDeviceName = ""] = knownDevices;
+    this.selectOpen = false;
     const changeDevice = (name) => {
       this.currentDeviceName = name;
     };
-    for await (const { currentDeviceName } of this) {
+    b3(() => {
+      this.selectOpen = TrainService.selectOpen.value;
+    });
+    for await (const { currentDeviceName, selectOpen } of this) {
       const service = deviceToServiceMap[currentDeviceName];
       yield /* @__PURE__ */ o4(k, { children: [
         /* @__PURE__ */ o4("link", { rel: "stylesheet", href: "/dist/main.css" }),
@@ -2497,6 +2505,7 @@
             display: flex;
             flex-direction: column;
             height: 100%;
+            ${selectOpen ? "opacity: 10%;" : ""}
            }
 
            main {
