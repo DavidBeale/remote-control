@@ -1338,7 +1338,7 @@
   // package.json
   var package_default = {
     name: "remote-control",
-    version: "1.1.4",
+    version: "1.1.5",
     description: "BLE Remote Control",
     main: "src/index.html",
     directories: {
@@ -2505,7 +2505,7 @@
             display: flex;
             flex-direction: column;
             height: 100%;
-            ${selectOpen ? "opacity: 10%;" : ""}
+            ${selectOpen ? "opacity: 10%; pointer-events: none;" : ""}
            }
 
            main {
