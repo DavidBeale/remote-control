@@ -1338,7 +1338,7 @@
   // package.json
   var package_default = {
     name: "remote-control",
-    version: "1.1.5",
+    version: "1.1.7",
     description: "BLE Remote Control",
     main: "src/index.html",
     directories: {
@@ -1436,7 +1436,7 @@
           nav {
             border-bottom: 2px solid var(--pico-primary-hover-background);;
             width: 100%;
-            margin-top: var(--pico-spacing);
+            margin-top: .5rem;
             padding-inline: 0.5rem;
           }
   
@@ -1531,6 +1531,7 @@
         :host {
           display: block;
           position: relative;
+          text-align: center;
         }
 
         #stop {
@@ -2148,16 +2149,29 @@
   }
   var Gear_default = asWebComponent(Direction, D);
 
+  // src/utils/throttle.js
+  function throttle(func, delay) {
+    let lastCall = 0;
+    return function t4(...args) {
+      const now = (/* @__PURE__ */ new Date()).getTime();
+      if (now - lastCall < delay) {
+        return;
+      }
+      lastCall = now;
+      func(...args);
+    };
+  }
+
   // src/controls/VelocityFeature.jsx
   async function* VelocityFeature(feature) {
     this.speed = 0;
     this.direction = 1;
-    const changeSpeed = (event) => {
+    const changeSpeed = throttle((event) => {
       this.speed = event.detail;
       this.props.feature.writeValue(
         Int8Array.from([this.speed * this.direction])
       );
-    };
+    }, 100);
     const changeDirection = (event) => {
       this.direction = event.detail;
       this.props.feature.writeValue(
@@ -2176,7 +2190,7 @@
         /* @__PURE__ */ o4("style", { children: `
             article {
               margin-bottom: 0;
-              --pico-block-spacing-vertical: var(--pico-spacing);
+              --pico-block-spacing-vertical: .5rem;
             }        
         ` }),
         /* @__PURE__ */ o4(
@@ -2219,7 +2233,7 @@
           section {
             display: flex;
             flex-direction: column;
-            padding-block: 1rem;
+            padding-block: .5rem;
             height: 100%;
           }
 
@@ -2229,7 +2243,7 @@
 
           article {
             flex: 1;
-            --pico-block-spacing-vertical: var(--pico-spacing);
+            --pico-block-spacing-vertical: .5rem;
             padding-bottom: 0;
           }
 
@@ -2508,10 +2522,11 @@
             ${selectOpen ? "opacity: 10%; pointer-events: none;" : ""}
            }
 
-           main {
+           main.container-fluid {
             height: 100%;
             display: flex;
             flex-direction: column;
+            padding-inline: .5rem;
            }
 
            main :nth-child(2) {
