@@ -1,6 +1,6 @@
 import { render } from 'preact';
 import asWebComponent from 'as-web-component';
-import { effect } from '@preact/signals';
+import { computed, effect } from '@preact/signals';
 
 import Header from './components/Header.jsx';
 import DeviceSelector from './components/DeviceSelector.jsx';
@@ -12,13 +12,18 @@ async function* RemoteControl() {
   const knownDevices = ['Star', 'Jessie'];
 
   const deviceToServiceMap = Object.fromEntries(
-    knownDevices.map((name) => [
-      name,
-      new TrainService(name, (status) => {
-        this.status = status;
-      })
-    ])
+    knownDevices.map((name) => [name, new TrainService(name)])
   );
+
+  this.status = computed(() =>
+    Object.entries(deviceToServiceMap).map(
+      ([, service]) => service.isConnected.value
+    )
+  );
+
+  effect(() => {
+    console.log(this.status.value);
+  });
 
   [this.currentDeviceName = ''] = knownDevices;
   this.selectOpen = TrainService.selectOpen;
@@ -62,7 +67,7 @@ async function* RemoteControl() {
             currentDeviceName={currentDeviceName}
             onChange={(event) => changeDevice(event.detail.name)}
           ></DeviceSelector>
-          {service.isConnected ? (
+          {service.isConnected.value ? (
             <Controls service={service}></Controls>
           ) : (
             <Connect service={service}></Connect>

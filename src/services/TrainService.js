@@ -5,13 +5,13 @@ import enqueue from '../utils/enqueue';
 const TRAIN_SERVICE_UUID = 'e4580f53-0298-41fa-8210-ce8f8bbe23a3';
 
 export default class TrainService {
-  constructor(deviceName, statusHandler = () => {}) {
+  constructor(deviceName) {
     this.deviceName = deviceName;
-    this.statusHandler = statusHandler;
-
     this.device = undefined;
     this.primaryService = undefined;
     this.featureMap = {};
+
+    this.isConnected = signal(false);
   }
 
   static async select(name) {
@@ -34,10 +34,6 @@ export default class TrainService {
 
   static selectOpen = signal(false);
 
-  get isConnected() {
-    return this.device?.gatt?.connected ?? false;
-  }
-
   get features() {
     return Object.values(this.featureMap);
   }
@@ -59,9 +55,7 @@ export default class TrainService {
       );
 
       await loadFeatures.call(this);
-      this.statusHandler({
-        isConnected: this.isConnected
-      });
+      this.isConnected.value = true;
     } catch (error) {
       console.error('Failed to connect to Device');
       console.error(error.stack ?? error);
@@ -76,13 +70,14 @@ export default class TrainService {
 
   async disconnect() {
     this.device.removeEventListener('gattserverdisconnected', reConnect);
-
+    this.isConnected.value = false;
     await this.device.disconnect();
   }
 }
 
 function reConnect() {
   console.log('Disconnected from device', this.device?.name ?? 'Unknown');
+  this.isConnected.value = false;
   this.connect(this.device);
 }
 
