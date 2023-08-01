@@ -4,11 +4,7 @@ import { screenLockDisabled } from '../services/WakeLockService';
 import { effect } from '@preact/signals';
 
 async function* WakeLock() {
-  this.wakeLockDisabled = false;
-
-  effect(() => {
-    this.wakeLockDisabled = screenLockDisabled.value;
-  });
+  this.wakeLockDisabled = screenLockDisabled;
 
   for await (const { wakeLockDisabled } of this) {
     yield (
@@ -28,10 +24,12 @@ async function* WakeLock() {
         </style>
 
         <span>🔅</span>
-        {!wakeLockDisabled && <span>🚫</span>}
+        {!wakeLockDisabled.value && <span>🚫</span>}
       </>
     );
   }
 }
 
-export default asWebComponent(WakeLock, render);
+export default asWebComponent(WakeLock, render, {
+  effect
+});

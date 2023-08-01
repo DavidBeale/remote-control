@@ -35,7 +35,7 @@
   "dependencies": {
     "@picocss/pico": "^2.0.0-alpha1",
     "@preact/signals": "^1.1.5",
-    "as-web-component": "^0.5.1",
+    "as-web-component": "^0.6.0",
     "multirator": "^0.1.0",
     "preact": "^10.16.0"
   }

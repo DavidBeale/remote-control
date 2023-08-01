@@ -21,15 +21,11 @@ async function* RemoteControl() {
   );
 
   [this.currentDeviceName = ''] = knownDevices;
-  this.selectOpen = false;
+  this.selectOpen = TrainService.selectOpen;
 
   const changeDevice = (name) => {
     this.currentDeviceName = name;
   };
-
-  effect(() => {
-    this.selectOpen = TrainService.selectOpen.value;
-  });
 
   for await (const { currentDeviceName, selectOpen } of this) {
     const service = deviceToServiceMap[currentDeviceName];
@@ -43,7 +39,7 @@ async function* RemoteControl() {
             display: flex;
             flex-direction: column;
             height: 100%;
-            ${selectOpen ? 'opacity: 10%; pointer-events: none;' : ''}
+            ${selectOpen.value ? 'opacity: 10%; pointer-events: none;' : ''}
            }
 
            main.container-fluid {
@@ -77,4 +73,4 @@ async function* RemoteControl() {
   }
 }
 
-export default asWebComponent(RemoteControl, render);
+export default asWebComponent(RemoteControl, render, { effect });
