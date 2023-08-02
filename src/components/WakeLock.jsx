@@ -3,6 +3,8 @@ import asWebComponent from 'as-web-component';
 import { screenLockDisabled } from '../services/WakeLockService';
 import { effect } from '@preact/signals';
 
+import './WakeLock.css';
+
 async function* WakeLock() {
   this.wakeLockDisabled = screenLockDisabled;
 
@@ -10,18 +12,6 @@ async function* WakeLock() {
     yield (
       <>
         <link rel="stylesheet" href="/dist/main.css"></link>
-        <style>
-          {`
-          :host {
-             display: grid;
-          }
-  
-          span {
-            grid-column: 1;
-            grid-row: 1;
-          }
-        `}
-        </style>
 
         <span>🔅</span>
         {!wakeLockDisabled.value && <span>🚫</span>}

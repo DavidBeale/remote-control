@@ -1,0 +1,15 @@
+:host([data-component='header']) {
+  background: var(--pico-primary-background);
+  display: block;
+
+  & header {
+    display: flex;
+  }
+
+  & h1 {
+    --pico-font-size: 1rem;
+    flex: 2;
+    text-align: center;
+    margin-bottom: 0;
+  }
+}

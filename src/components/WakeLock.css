@@ -1,0 +1,8 @@
+:host([data-component='wake-lock']) {
+  display: grid;
+
+  & span {
+    grid-column: 1;
+    grid-row: 1;
+  }
+}
