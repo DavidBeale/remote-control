@@ -1,0 +1,6 @@
+:host([data-component='velocity-feature']) {
+  & article {
+    margin-bottom: 0;
+    --pico-block-spacing-vertical: 0.5rem;
+  }
+}

@@ -2,12 +2,6 @@ import { render } from 'preact';
 import asWebComponent from 'as-web-component';
 import featureMap from '../services/FeatureMap.js';
 
-const template = document.createElement('template');
-template.innerHTML = `
-  <label id="label" for="switch"></label>
-  <input id="switch" type="checkbox" />
-`;
-
 async function* SwitchFeature(feature) {
   this.checked = false;
 

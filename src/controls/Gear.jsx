@@ -1,6 +1,8 @@
 import { render } from 'preact';
 import asWebComponent, { dispatchEvent } from 'as-web-component';
 
+import './Gear.css';
+
 async function Direction(gear, gears = {}, disabled = false, step = 1) {
   const gearEntries = Object.entries(gears);
   const min = Math.min(...gearEntries.map(([, value]) => value));
@@ -9,29 +11,7 @@ async function Direction(gear, gears = {}, disabled = false, step = 1) {
   return (
     <>
       <link rel="stylesheet" href="/dist/main.css"></link>
-      <style>
-        {`
-        :host {
-          display: block;
-          margin-bottom: 1rem;
-        }
 
-        datalist {
-          display: flex;
-          flex-direction: row;
-          justify-content: space-between;
-        }
-        
-        option {
-          padding: 0;
-        }
-        
-        input[type="range"] {
-          margin: 0;
-        }
-        
-      `}
-      </style>
       <input
         type="range"
         value={gear}

@@ -1,0 +1,18 @@
+:host([data-component='gear']) {
+  display: block;
+  margin-bottom: 1rem;
+
+  & datalist {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  & option {
+    padding: 0;
+  }
+
+  & input[type='range'] {
+    margin: 0;
+  }
+}

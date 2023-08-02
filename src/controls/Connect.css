@@ -1,0 +1,10 @@
+:host([data-component='connect']) {
+  & section {
+    display: flex;
+    height: 100%;
+  }
+
+  & button {
+    margin: auto;
+  }
+}

@@ -8,6 +8,8 @@ import Controls from './controls/Controls.jsx';
 import Connect from './controls/Connect.jsx';
 import TrainService from './services/TrainService.js';
 
+import './RemoteControl.css';
+
 async function* RemoteControl() {
   const knownDevices = ['Star', 'Jessie'];
 
@@ -48,21 +50,7 @@ async function* RemoteControl() {
         <style>
           {`
            :host {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
             ${selectOpen.value ? 'opacity: 10%; pointer-events: none;' : ''}
-           }
-
-           main.container-fluid {
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            padding-inline: .5rem;
-           }
-
-           main :nth-child(2) {
-            flex: 1;
            }
           `}
         </style>

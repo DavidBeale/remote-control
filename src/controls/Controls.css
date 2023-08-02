@@ -1,0 +1,18 @@
+:host([data-component='controls']) {
+  & section {
+    display: flex;
+    flex-direction: column;
+    padding-block: 0.5rem;
+    height: 100%;
+  }
+
+  & article {
+    flex: 1;
+    --pico-block-spacing-vertical: 0.5rem;
+    padding-bottom: 0;
+  }
+
+  & fieldset {
+    margin-bottom: 0;
+  }
+}

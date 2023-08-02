@@ -5,6 +5,8 @@ import SwitchFeature from './SwitchFeature.jsx';
 import featureMap from '../services/FeatureMap.js';
 import VelocityFeature from './VelocityFeature.jsx';
 
+import './Controls.css';
+
 async function Controls(service) {
   const { features } = service;
   const velocity = features.find(
@@ -14,30 +16,6 @@ async function Controls(service) {
   return (
     <section>
       <link rel="stylesheet" href="/dist/main.css"></link>
-      <style>
-        {`
-          section {
-            display: flex;
-            flex-direction: column;
-            padding-block: .5rem;
-            height: 100%;
-          }
-
-          #connect {
-            margin: auto;
-          }
-
-          article {
-            flex: 1;
-            --pico-block-spacing-vertical: .5rem;
-            padding-bottom: 0;
-          }
-
-          fieldset {
-            margin-bottom: 0;
-          }
-        `}
-      </style>
 
       <article>
         <fieldset>

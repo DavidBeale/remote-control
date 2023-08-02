@@ -5,6 +5,8 @@ import Throttle from './Throttle.jsx';
 import Gear from './Gear.jsx';
 import throttle from '../utils/throttle.js';
 
+import './VelocityFeature.css';
+
 async function* VelocityFeature(feature) {
   this.speed = 0;
   this.direction = 1;
@@ -36,14 +38,7 @@ async function* VelocityFeature(feature) {
     yield (
       <article>
         <link rel="stylesheet" href="/dist/main.css"></link>
-        <style>
-          {`
-            article {
-              margin-bottom: 0;
-              --pico-block-spacing-vertical: .5rem;
-            }        
-        `}
-        </style>
+
         <Gear
           gear={this.direction}
           gears={{

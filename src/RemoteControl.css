@@ -1,0 +1,16 @@
+:host([data-component='remote-control']) {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  & main.container-fluid {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding-inline: 0.5rem;
+  }
+
+  & main :nth-child(2) {
+    flex: 1;
+  }
+}
