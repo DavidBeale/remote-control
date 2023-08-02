@@ -9,7 +9,7 @@
   "scripts": {
     "test": "npm run lint && npm run build",
     "start": "esbuild src/main.js --bundle --outdir=public/dist --jsx-import-source=preact --jsx=automatic --watch --servedir=public --sourcemap",
-    "build": "esbuild src/main.js --bundle --outdir=dist/dist --jsx-import-source=preact --jsx=automatic && cp -r public/. dist/",
+    "build": "esbuild src/main.js --bundle --outdir=dist/dist --jsx-import-source=preact --jsx=automatic --minify --keep-names && cp -r public/. dist/",
     "lint": "eslint src",
     "deploy": "gh-pages -d dist"
   },
