@@ -60,6 +60,8 @@ export default class TrainService {
       console.error('Failed to connect to Device');
       console.error(error.stack ?? error);
       console.log('Retrying in 3secs');
+
+      this.isConnected.value = false;
       setTimeout(async () => {
         // Can't just call device.gatt.connect() again in WebBLE browser on iOS :-(
         const newDevice = await TrainService.select(this.device.name);
@@ -68,16 +70,19 @@ export default class TrainService {
     }
   }
 
-  async disconnect() {
+  disconnect() {
+    if (!this.device) return;
+
     this.device.removeEventListener('gattserverdisconnected', reConnect);
     this.isConnected.value = false;
-    await this.device.disconnect();
+    this.device.gatt.disconnect();
   }
 }
 
 function reConnect() {
+  if (!this.isConnected.value) return;
+
   console.log('Disconnected from device', this.device?.name ?? 'Unknown');
-  this.isConnected.value = false;
   this.connect(this.device);
 }
 

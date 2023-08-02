@@ -21,15 +21,22 @@ async function* RemoteControl() {
     )
   );
 
-  effect(() => {
-    console.log(this.status.value);
-  });
-
   [this.currentDeviceName = ''] = knownDevices;
   this.selectOpen = TrainService.selectOpen;
 
   const changeDevice = (name) => {
     this.currentDeviceName = name;
+  };
+
+  const menuSelected = (option) => {
+    // eslint-disable-next-line default-case
+    switch (option) {
+      case 'Disconnect': {
+        const service = deviceToServiceMap[this.currentDeviceName];
+        service.disconnect();
+        break;
+      }
+    }
   };
 
   for await (const { currentDeviceName, selectOpen } of this) {
@@ -66,6 +73,7 @@ async function* RemoteControl() {
             devices={knownDevices}
             currentDeviceName={currentDeviceName}
             onChange={(event) => changeDevice(event.detail.name)}
+            onMenu={(event) => menuSelected(event.detail)}
           ></DeviceSelector>
           {service.isConnected.value ? (
             <Controls service={service}></Controls>

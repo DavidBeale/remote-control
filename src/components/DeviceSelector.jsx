@@ -13,6 +13,17 @@ async function DeviceSelector(devices, currentDeviceName) {
     );
   };
 
+  const menuSelect = (event) => {
+    dispatchEvent(
+      this,
+      new CustomEvent('Menu', {
+        detail: event.target.value
+      })
+    );
+    // eslint-disable-next-line no-param-reassign
+    event.target.value = '';
+  };
+
   return (
     <>
       <link rel="stylesheet" href="/dist/main.css"></link>
@@ -40,6 +51,14 @@ async function DeviceSelector(devices, currentDeviceName) {
             --pico-form-element-spacing-horizontal: 1rem;
             border-radius: 0;
           }
+
+          :host select {
+            width: 2rem;
+            padding: .3rem;
+            background-image: none;
+            text-align: center;
+            margin: 0;
+          }
         }
         `}
       </style>
@@ -57,6 +76,13 @@ async function DeviceSelector(devices, currentDeviceName) {
             );
           })}
         </div>
+        <select onChange={menuSelect} value="">
+          <option value="" disabled>
+            ...
+          </option>
+          <option>Add Device</option>
+          <option>Disconnect</option>
+        </select>
       </nav>
     </>
   );
