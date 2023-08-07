@@ -7,6 +7,7 @@ import DeviceSelector from './components/DeviceSelector.jsx';
 import Controls from './controls/Controls.jsx';
 import Connect from './controls/Connect.jsx';
 import TrainService from './services/TrainService.js';
+import Dial from './components/Dial.jsx';
 
 import './RemoteControl.css';
 
@@ -68,6 +69,7 @@ async function* RemoteControl() {
           ) : (
             <Connect service={service}></Connect>
           )}
+          <Dial />
         </main>
       </>
     );

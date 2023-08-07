@@ -1,0 +1,9 @@
+:host([data-component='dial']) {
+  #track {
+    fill: var(--pico-switch-background-color);
+  }
+
+  #thumb {
+    fill: var(--pico-primary-background);
+  }
+}
