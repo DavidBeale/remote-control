@@ -69,7 +69,7 @@ async function* RemoteControl() {
           ) : (
             <Connect service={service}></Connect>
           )}
-          <Dial />
+          <Dial value={50} />
         </main>
       </>
     );

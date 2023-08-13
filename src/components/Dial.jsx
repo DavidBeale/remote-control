@@ -5,7 +5,8 @@ import './Dial.css';
 
 const trackPath = describeArc(150, 150, 150, 150 - 30, -150, 150);
 
-function Dial(min = 0, max = 100, value = 0) {
+function Dial(value = 0) {
+  const angle = (300 / 100) * value - 150;
   return (
     <>
       <link rel="stylesheet" href="/dist/main.css"></link>
@@ -13,7 +14,7 @@ function Dial(min = 0, max = 100, value = 0) {
         <path id="track" d={trackPath}></path>
         <path
           id="thumb"
-          d={describeArc(150, 150, 150, 150 - 30, -150, 45)}
+          d={describeArc(150, 150, 150, 150 - 30, -150, angle)}
         ></path>
       </svg>
     </>
