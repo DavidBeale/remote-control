@@ -12,7 +12,7 @@ import Dial from './components/Dial.jsx';
 import './RemoteControl.css';
 
 async function* RemoteControl() {
-  const knownDevices = ['Star', 'Jessie'];
+  const knownDevices = ['Star', 'Jessie', 'Greendale Rocket'];
 
   const deviceToServiceMap = Object.fromEntries(
     knownDevices.map((name) => [name, new TrainService(name)])
@@ -69,7 +69,7 @@ async function* RemoteControl() {
           ) : (
             <Connect service={service}></Connect>
           )}
-          <Dial value={50} />
+          {/* <Dial value={50} /> */}
         </main>
       </>
     );
