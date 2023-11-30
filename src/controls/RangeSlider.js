@@ -1,3 +1,5 @@
+/* eslint-disable no-bitwise */
+/* eslint-disable no-param-reassign */
 export default class RangeSlider {
   constructor(element, settings) {
     this.settings = {
